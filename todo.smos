@@ -1,0 +1,130 @@
+version: 2.0.0
+value:
+- entry:
+    header: Graphical improvements
+    contents: 'GOAL: an idiot-proof interface with dropboxes and asking minimal configuration'
+    state-history:
+    - state: TODO
+      time: 2023-01-15 15:47:13
+  forest:
+  - entry:
+      header: 'When dropping a file:'
+      state-history:
+      - state: TODO
+        time: 2023-01-15 15:41:33
+    forest:
+    - header: icon should be the correct one and not a generic file icon
+      state-history:
+      - state: TODO
+        time: 2023-01-15 15:41:33
+    - header: icon should be at center
+      state-history:
+      - state: NEXT
+        time: 2023-01-15 15:41:41
+      - state: TODO
+        time: 2023-01-15 15:41:33
+    - header: icon should not be overwritten by text
+      state-history:
+      - state: TODO
+        time: 2023-01-15 15:41:33
+    - header: icon should not change the shape of other dropboxes
+      state-history:
+      - state: TODO
+        time: 2023-01-15 15:43:35
+    - entry:
+        header: adjust behavior when resizing
+        state-history:
+        - state: TODO
+          time: 2023-01-15 15:43:37
+      forest:
+      - header: resizing down should not work below minimum dropbox size
+        state-history:
+        - state: TODO
+          time: 2023-01-15 15:43:37
+      - header: resizing up should adapt the drop boxes equally
+        state-history:
+        - state: TODO
+          time: 2023-01-15 15:43:37
+      - header: resizing should keep things centered
+        state-history:
+        - state: TODO
+          time: 2023-01-15 15:43:37
+  - Add flag entries
+  - Add multiple choice entries
+  - Add textbox entries
+  - header: Add option to drop files incrementally
+    contents: i.e. a "+" box that when dropped onto, creates another "+" box on the
+      right
+  - Add tooltips for each flag/dropbox/whatever
+- entry:
+    header: Functional improvements
+    contents: 'GOAL: pressing the button should launch the ipynb and produce the output'
+    state-history:
+    - state: TODO
+      time: 2023-01-15 15:47:11
+  forest:
+  - header: Pressing the button will print the file names
+    state-history:
+    - state: NEXT
+      time: 2023-01-15 15:44:44
+    - state: TODO
+      time: 2023-01-15 15:44:40
+  - entry:
+      header: Pressing the button will raise an alert if not all file names are there
+      state-history:
+      - state: TODO
+        time: 2023-01-15 15:44:41
+    forest:
+    - header: Print the name of the missing file(s)
+      state-history:
+      - state: TODO
+        time: 2023-01-15 15:44:41
+  - Add a link to download the ipynb associated with the app
+- entry:
+    header: Packaging
+    contents: 'Goal: make a microapp that takes an ipynb and a conf file and outputs
+      a microapp'
+    state-history:
+    - state: TODO
+      time: 2023-01-15 15:47:16
+  forest:
+  - header: Create a test ipynb with parameters in the first box
+    state-history:
+    - state: NEXT
+      time: 2023-01-15 18:25:42
+    - state: TODO
+      time: 2023-01-15 15:46:58
+  - header: Create a test script to learn how nbparameterise works
+    state-history:
+    - state: TODO
+      time: 2023-01-15 18:24:22
+  - header: Improve the script to add nbconvert and get a py file with parameters
+      substituted
+    state-history:
+    - state: TODO
+      time: 2023-01-15 18:24:22
+  - header: Improve the script to call pyinstaller on the produces py
+    state-history:
+    - state: TODO
+      time: 2023-01-15 18:24:21
+- entry:
+    header: Documentation
+    contents: 'Goal: show it to a junior programmer and have it understood'
+    state-history:
+    - state: TODO
+      time: 2023-01-15 15:47:16
+  forest:
+  - header: Create a README stating the intended goal
+    state-history:
+    - state: NEXT
+      time: 2023-01-15 15:47:01
+  - header: Add a requirements.txt
+    state-history:
+    - state: TODO
+      time: 2023-01-15 15:47:03
+  - entry: Create an example folder/app/notebook
+    forest:
+    - Create an example ipynb
+    - Create an example configuration file
+    - Create the README.md
+    - Create the example files

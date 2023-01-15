@@ -1,0 +1,34 @@
+{
+  "notebook": "prova.ipynb",
+  "inputs": [
+    "File1",
+    "File2.csv",
+    "File3.xlsx"
+  ],
+  "flags": [
+    "Print something",
+    "Print something else"
+  ],
+  "fields": [
+    "Text field 1",
+    "Text field 2"
+  ],
+  "choices": [
+    {
+      "name": "Choose a letter",
+      "choice": [
+        "choiceA",
+        "choiceB",
+        "choiceC"
+      ]
+    },
+    {
+      "name": "Choose a number",
+      "choice": [
+        "choice1",
+        "choice2",
+        "choice3"
+      ]
+    }
+  ]
+}
