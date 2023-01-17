@@ -79,7 +79,7 @@ value:
       state-history:
       - state: TODO
         time: 2023-01-15 15:44:41
-  - Add a link to download the ipynb associated with the app
+  - Add a link to download the ipynb and the configuration associated with the app
 - entry:
     header: Packaging
     contents: 'Goal: make a microapp that takes an ipynb and a conf file and outputs
@@ -94,6 +94,10 @@ value:
       time: 2023-01-15 18:25:42
     - state: TODO
       time: 2023-01-15 15:46:58
+  - header: Create a test configuration file
+    state-history:
+    - state: DONE
+      time: 2023-01-17 20:48:34
   - header: Create a test script to learn how nbparameterise works
     state-history:
     - state: TODO
@@ -122,9 +126,21 @@ value:
     state-history:
     - state: TODO
       time: 2023-01-15 15:47:03
+  - entry: Create (mermaid?) diagrams that show functionality
+    forest:
+    - input/output of microfactory
+    - input/output of microapp
+    - how a microapp can be edited (extract conf+nb, edit, make a new app)
   - entry: Create an example folder/app/notebook
     forest:
     - Create an example ipynb
-    - Create an example configuration file
+    - header: Create an example configuration file
+      state-history:
+      - state: null
+        time: 2023-01-17 20:48:21
+      - state: DONE
+        time: 2023-01-17 20:48:18
+      - state: DONE
+        time: 2023-01-17 20:47:56
     - Create the README.md
     - Create the example files

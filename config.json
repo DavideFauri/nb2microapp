@@ -1,34 +1,58 @@
 {
-  "notebook": "prova.ipynb",
-  "inputs": [
-    "File1",
-    "File2.csv",
-    "File3.xlsx"
-  ],
-  "flags": [
-    "Print something",
-    "Print something else"
-  ],
-  "fields": [
-    "Text field 1",
-    "Text field 2"
-  ],
-  "choices": [
-    {
+  "app_name": "Programma di prova",
+  "notebook": "test notebook.ipynb",
+  "inputs": {
+    "file1": {
+      "name": "File 1",
+      "tooltip": "The first file can be anything"
+    },
+    "file2": {
+      "name": "File 2.csv",
+      "tooltip": "The second file must be a comma-separated text file"
+    },
+    "file3": {
+      "name": "File3.xlsx",
+      "tooltip": "The third file must be an Excel file"
+    }
+  },
+  "flags": {
+    "flag1": {
+      "name": "Print something",
+      "tooltip": "Toggle this flag to print something"
+    },
+    "flag2": {
+      "name": "Print something else",
+      "tooltip": "Toggle this flag to print something else"
+    }
+  },
+  "text_fields": {
+    "text_field_1": {
+      "name": "Text field 1",
+      "tooltip": "This is a free-text input"
+    },
+    "text_field_2": {
+      "name": "Text field 2",
+      "tooltip": "This is a free-text input too"
+    }
+  },
+  "choices": {
+    "choice1": {
       "name": "Choose a letter",
-      "choice": [
-        "choiceA",
-        "choiceB",
-        "choiceC"
+      "tooltip": "Will print the corresponding letter",
+      "options": [
+        "A",
+        "B",
+        "C"
       ]
     },
-    {
+    "choice2": {
       "name": "Choose a number",
-      "choice": [
-        "choice1",
-        "choice2",
-        "choice3"
+      "tooltip": "Will print the corresponding number",
+      "options": [
+        "1",
+        "2",
+        "3"
       ]
     }
-  ]
+  }
 }
