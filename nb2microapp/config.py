@@ -3,9 +3,8 @@ import json
 
 class Param:
     def __init__(self, json_data):
-        print(json_data)
         self.name = json_data["name"]
-        self.tooltip = json_data["tooltip"]
+        self.tooltip = json_data["tooltip"] if "tooltip" in json_data else None
 
 
 class Input(Param):
