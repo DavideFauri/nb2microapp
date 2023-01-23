@@ -1,70 +1,85 @@
 import json
+from pathlib import Path
+from string import ascii_letters, digits
 
 
 class Param:
-    def __init__(self, json_data):
+    def __init__(self, identifier: str, json_data: dict):
+        self.identifier = identifier
         self.name = json_data["name"]
         self.tooltip = json_data["tooltip"] if "tooltip" in json_data else None
 
 
 class Input(Param):
-    def __init__(self, json_data):
-        super().__init__(json_data)
+    def __init__(self, identifier, json_data):
+        super().__init__(identifier, json_data)
 
 
 class Flag(Param):
-    def __init__(self, json_data):
-        super().__init__(json_data)
+    def __init__(self, identifier, json_data):
+        super().__init__(identifier, json_data)
 
 
 class TextField(Param):
-    def __init__(self, json_data):
-        super().__init__(json_data)
+    def __init__(self, identifier, json_data):
+        super().__init__(identifier, json_data)
 
 
 class Choices(Param):
-    def __init__(self, json_data):
-        super().__init__(json_data)
+    def __init__(self, identifier, json_data):
+        super().__init__(identifier, json_data)
         self.options = json_data["options"]
 
 
 class Config:
-    def __init__(self, json_path):
+    @classmethod
+    def load(cls, config_json: str | Path) -> dict:
 
-        with open(json_path, "r") as config_file:
-            config = json.load(config_file)
+        try:
+            if Path(config_json).is_file():
+                # option 1, we are provided a path to a json file
+                with open(config_json, "r") as config_file:
+                    config = json.load(config_file)
+            else:
+                # option 2, we are provided a json string
+                config = json.load(config_json)
+        except e:
+            alertBox(
+                title="Invalid configuration!",
+                text="The provided configuration might not be a JSON.",
+            )
+            raise e
 
-            # parse the app name
-            assert (
-                "app_name" in config
-            ), "The configuration file does not specify an app name!"
-            self.app_name = config["app_name"]
+        return config
 
-            # parse the notebook path
-            assert (
-                "notebook" in config
-            ), "The configuration file does not specify a notebook filename!"
-            self.notebook = config["notebook"]
+    @classmethod
+    def validate(cls, config: dict) -> None:
+        assert (
+            "app_name" in config
+        ), "The configuration file does not specify an app name!"
+        assert (
+            "notebook" in config
+        ), "The configuration file does not specify a notebook filename!"
+        assert (
+            "inputs" in config and len(config["inputs"]) > 0
+        ), "The configuration file does not specify the input files!"
 
-            # parse the input files
-            assert (
-                "inputs" in config and len(config["inputs"]) > 0
-            ), "The configuration file does not specify the input files!"
-            self.input_files = []
-            for input_file in config["inputs"].values():
-                self.input_files.append(Input(input_file))
+        allowed_characters = set(ascii_letters + digits + "_")
+        for group in ["inputs", "flags", "text_fields", "choices"]:
+            if group in config:
+                for identifier_string in config[group].keys():
+                    assert (
+                        set(identifier_string) <= allowed_characters
+                    ), f"The identifier '{item_name}' contains spaces or other unallowed characters"
 
-            # parse the configuration flags
-            self.flags = []
-            for flag in config["flags"].values():
-                self.flags.append(Flag(flag))
+    def __init__(self, config_json: str | Path):
 
-            # parse the configuration text fields
-            self.text_fields = []
-            for text_field in config["text_fields"].values():
-                self.text_fields.append(TextField(text_field))
+        config = self.load(config_json)
+        self.validate(config)
 
-            # parse the configuration choice menus
-            self.choices = []
-            for choice in config["choices"].values():
-                self.choices.append(Choices(choice))
+        self.app_name = config["app_name"]
+        self.notebook = config["notebook"]
+        self.input_files = [Input(ID, i) for ID, i in config["inputs"].items()]
+        self.flags = [Flag(ID, f) for ID, f in config["flags"].items()]
+        self.text_fields = [TextField(ID, t) for ID, t in config["text_fields"].items()]
+        self.choices = [Choices(ID, c) for ID, c in config["choices"].items()]

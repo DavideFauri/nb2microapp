@@ -77,7 +77,7 @@ class DropBoxLabel(QLabel):
 
 # This widget adds file-specific functionalities
 class DropBox(QWidget):
-    def __init__(self, input: Input = Input({"name": "il tuo file"})):
+    def __init__(self, input: Input):
         super().__init__()
         self.setAcceptDrops(True)
 
