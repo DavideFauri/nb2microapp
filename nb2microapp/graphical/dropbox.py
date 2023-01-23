@@ -3,6 +3,7 @@ from PyQt6.QtCore import QFileInfo, Qt, QSize
 from PyQt6.QtGui import *
 from pathlib import Path
 from nb2microapp.config import Config, Input
+from nb2microapp.graphical.alert import alertBox
 
 
 STYLE_NORMAL = "QLabel{border: 1px dashed #aaa; padding: 0px;}"
@@ -105,12 +106,6 @@ class DropBox(QWidget):
     def isValidDropExtension(self, filepath):
         return filepath.suffix == self.input_ext
 
-    def alertInvalidDropExtension(self, filepath):
-        alert = QMessageBox()
-        alert.setWindowTitle("Invalid file!")
-        alert.setText("This file does not seem right: " + filepath.name)
-        _ = alert.exec()
-
     def dragEnterEvent(self, event: QDragEnterEvent):
         event.accept()
         if not self.isValidDroppable(event):
@@ -143,7 +138,10 @@ class DropBox(QWidget):
                 self.acceptDrop(dropped_file)
             else:
                 self.label.reset_style()
-                self.alertInvalidDropExtension(dropped_file)
+                alertBox(
+                    title="Invalid file!",
+                    text=f"This file does not seem right: {dropped_file.name}",
+                )
         else:
             dropped_file = Path(event.mimeData().urls()[0].toLocalFile())
             self.label.set_style_active(text=f"{self.input_name}", lock_it=True)
