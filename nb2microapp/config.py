@@ -4,30 +4,35 @@ from string import ascii_letters, digits
 
 
 class Param:
-    def __init__(self, identifier: str, json_data: dict):
+    def __init__(self, identifier: str, json_data: dict, value=None):
         self.identifier = identifier
+        assert "name" in json_data, f"There is no descriptive name for {identifier}!"
         self.name = json_data["name"]
         self.tooltip = json_data["tooltip"] if "tooltip" in json_data else None
+        self.value = value
 
 
 class Input(Param):
     def __init__(self, identifier, json_data):
-        super().__init__(identifier, json_data)
+        super().__init__(identifier, json_data, value=None)
 
 
 class Flag(Param):
     def __init__(self, identifier, json_data):
-        super().__init__(identifier, json_data)
+        super().__init__(identifier, json_data, value=False)
 
 
 class TextField(Param):
     def __init__(self, identifier, json_data):
-        super().__init__(identifier, json_data)
+        super().__init__(identifier, json_data, value="")
 
 
 class Choices(Param):
     def __init__(self, identifier, json_data):
-        super().__init__(identifier, json_data)
+        assert (
+            "options" in json_data and len(json_data["options"]) > 0
+        ), f"There are no options specified for {identifier}!"
+        super().__init__(identifier, json_data, value=json_data["options"][0])
         self.options = json_data["options"]
 
 
