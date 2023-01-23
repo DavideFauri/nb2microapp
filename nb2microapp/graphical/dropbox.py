@@ -81,6 +81,7 @@ class DropBox(QWidget):
     def __init__(self, input: Input):
         super().__init__()
         self.setAcceptDrops(True)
+        self.setToolTip(input.tooltip)
 
         # Parsing filename stuff
         self.input_file = Path(input.name)

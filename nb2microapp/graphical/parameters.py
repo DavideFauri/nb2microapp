@@ -14,6 +14,7 @@ class FlagBox(QCheckBox):
         super().__init__(flag.name)
         self.flag = flag
         self.stateChanged.connect(self.set_flag)
+        self.setToolTip(self.flag.tooltip)
 
     def set_flag(self):
         self.flag.value = self.isChecked()
@@ -26,6 +27,7 @@ class TextFieldBox(QLineEdit):
         self.setPlaceholderText(text_field.name)
         self.text_field = text_field
         self.editingFinished.connect(self.set_text)
+        self.setToolTip(self.text_field.tooltip)
 
     def set_text(self):
         self.text_field.value = self.text()
@@ -39,6 +41,7 @@ class ChoicesBox(QComboBox):
         self.insertItems(0, choices.options)
         self.choices = choices
         self.activated.connect(self.set_choice)
+        self.setToolTip(self.choices.tooltip)
 
     def set_choice(self):
         self.choices.value = self.currentText()
