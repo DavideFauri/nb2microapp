@@ -1,6 +1,9 @@
 import json
 from pathlib import Path
 from string import ascii_letters, digits
+from itertools import chain
+
+PARAM_TYPES = ["files", "flags", "texts", "choices"]
 
 
 class Param:
@@ -11,8 +14,11 @@ class Param:
         self.tooltip = json_data["tooltip"] if "tooltip" in json_data else None
         self.value = value
 
+    def __str__(self):
+        return f"{self.identifier}: {self.value}"
 
-class Input(Param):
+
+class File(Param):
     def __init__(self, identifier, json_data):
         super().__init__(identifier, json_data, value=None)
 
@@ -22,12 +28,12 @@ class Flag(Param):
         super().__init__(identifier, json_data, value=False)
 
 
-class TextField(Param):
+class Text(Param):
     def __init__(self, identifier, json_data):
         super().__init__(identifier, json_data, value="")
 
 
-class Choices(Param):
+class Choice(Param):
     def __init__(self, identifier, json_data):
         assert (
             "options" in json_data and len(json_data["options"]) > 0
@@ -66,16 +72,23 @@ class Config:
             "notebook" in config
         ), "The configuration file does not specify a notebook filename!"
         assert (
-            "inputs" in config and len(config["inputs"]) > 0
+            "files" in config and len(config["files"]) > 0
         ), "The configuration file does not specify the input files!"
 
         allowed_characters = set(ascii_letters + digits + "_")
-        for group in ["inputs", "flags", "text_fields", "choices"]:
+        for group in PARAM_TYPES:
             if group in config:
                 for identifier_string in config[group].keys():
                     assert (
                         set(identifier_string) <= allowed_characters
-                    ), f"The identifier '{item_name}' contains spaces or other unallowed characters"
+                    ), f"The identifier '{item_name}' contains spaces or other unallowed characters!"
+
+        all_IDs = list(
+            chain.from_iterable([ID for ID in config[p].keys()] for p in PARAM_TYPES)
+        )
+        assert len(all_IDs) == len(
+            set(all_IDs)
+        ), "Two or more identifiers have the same name!"
 
     def __init__(self, config_json: str | Path):
 
@@ -84,20 +97,23 @@ class Config:
 
         self.app_name = config["app_name"]
         self.notebook = config["notebook"]
-        self.input_files = [Input(ID, i) for ID, i in config["inputs"].items()]
-        self.flags = [Flag(ID, f) for ID, f in config["flags"].items()]
-        self.text_fields = [TextField(ID, t) for ID, t in config["text_fields"].items()]
-        self.choices = [Choices(ID, c) for ID, c in config["choices"].items()]
+        self.files = [File(ID, i) for ID, i in config["files"].items()]
+        if "flags" in config:
+            self.flags = [Flag(ID, f) for ID, f in config["flags"].items()]
+        if "texts" in config:
+            self.texts = [Text(ID, t) for ID, t in config["texts"].items()]
+        if "choices" in config:
+            self.choices = [Choice(ID, c) for ID, c in config["choices"].items()]
 
     def to_dict(self) -> dict:
         d = {}
         d["app_name"] = self.app_name
         d["notebook"] = self.notebook
-        d["inputs"] = dict([(i.identifier, i.value) for i in self.input_files])
+        d["files"] = dict([(i.identifier, i.value) for i in self.files])
         if self.flags:
             d["flags"] = dict([(f.identifier, f.value) for f in self.flags])
-        if self.text_fields:
-            d["text_fields"] = dict([(t.identifier, t.value) for t in self.text_fields])
+        if self.texts:
+            d["texts"] = dict([(t.identifier, t.value) for t in self.texts])
         if self.choices:
             d["choices"] = dict([(c.identifier, c.value) for c in self.choices])
         return d

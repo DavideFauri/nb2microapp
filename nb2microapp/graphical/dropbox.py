@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtCore import QFileInfo, Qt, QSize
 from PyQt6.QtGui import *
 from pathlib import Path
-from nb2microapp.config import Config, Input
+from nb2microapp.config import Config, File
 from nb2microapp.graphical.alert import alertBox
 
 
@@ -78,19 +78,16 @@ class DropBoxLabel(QLabel):
 
 # This widget adds file-specific functionalities
 class DropBox(QWidget):
-    def __init__(self, input: Input):
+    def __init__(self, file: File):
         super().__init__()
         self.setAcceptDrops(True)
-        self.setToolTip(input.tooltip)
-
-        # Parsing filename stuff
-        self.input_file = Path(input.name)
-        self.input_name = self.input_file.name
-        self.input_ext = self.input_file.suffix
+        self.setToolTip(file.tooltip)
+        self.param = file
+        self.filepath = Path(file.name)
 
         # Styling stuff
         self.setStyleSheet(STYLE_NORMAL)
-        self.label = DropBoxLabel(text=f"Trascina qui\n{self.input_name}")
+        self.label = DropBoxLabel(text=f"Trascina qui\n{self.filepath.name}")
         self.label.setObjectName("dropbox")
 
         # Layout stuff
@@ -105,19 +102,19 @@ class DropBox(QWidget):
         return event.mimeData().urls()[0].isLocalFile()
 
     def isValidDropExtension(self, filepath):
-        return filepath.suffix == self.input_ext
+        return filepath.suffix == self.filepath.suffix
 
     def dragEnterEvent(self, event: QDragEnterEvent):
         event.accept()
         if not self.isValidDroppable(event):
             self.label.set_style_wrong(text="This is not a file!")
-        elif self.input_ext:
+        elif self.filepath.suffix:
             dropped_file = Path(event.mimeData().urls()[0].toLocalFile())
             if self.isValidDropExtension(dropped_file):
                 self.label.set_style_right()
             else:
                 self.label.set_style_wrong(
-                    text=f"This is not a .{self.input_ext} file!"
+                    text=f"This is not a .{self.filepath.suffix} file!"
                 )
         else:
             self.label.set_style_active()
@@ -132,24 +129,20 @@ class DropBox(QWidget):
         if not self.isValidDroppable(event):
             if not self.label.locked:
                 self.label.reset_style()
-        elif self.input_ext:
+        else:
             dropped_file = Path(event.mimeData().urls()[0].toLocalFile())
-            if self.isValidDropExtension(dropped_file):
-                self.label.set_style_right(text=f"{self.input_name}", lock_it=True)
-                self.acceptDrop(dropped_file)
-            else:
+            if self.filepath.suffix and not self.isValidDropExtension(dropped_file):
                 self.label.reset_style()
                 alertBox(
                     title="Invalid file!",
                     text=f"This file does not seem right: {dropped_file.name}",
                 )
-        else:
-            dropped_file = Path(event.mimeData().urls()[0].toLocalFile())
-            self.label.set_style_active(text=f"{self.input_name}", lock_it=True)
-            self.acceptDrop(dropped_file)
+            else:
+                self.label.set_style_right(text=f"{self.filepath.name}", lock_it=True)
+                self.acceptDrop(dropped_file)
 
     def acceptDrop(self, filepath):
-        self.input_file = filepath
+        self.param.value = filepath
         icon = QFileIconProvider().icon(QFileInfo(str()))
         pixmap = icon.pixmap(100, 100)
         self.label.setPixmap(pixmap)
@@ -162,11 +155,11 @@ class DropBoxesFrame(QFrame):
         self.mainLayout = QHBoxLayout()
 
         # Create each single dropbox
-        for f in configuration.input_files:
+        for f in configuration.files:
             self.add_dropbox(f)
 
         self.setLayout(self.mainLayout)
 
-    def add_dropbox(self, input_file: Input, add_more=False):
-        self.dropboxes.append(DropBox(input_file))
+    def add_dropbox(self, file: File, add_more=False):
+        self.dropboxes.append(DropBox(file))
         self.mainLayout.addWidget(self.dropboxes[-1])

@@ -1,7 +1,7 @@
 {
   "app_name": "Programma di prova",
   "notebook": "test notebook.ipynb",
-  "inputs": {
+  "files": {
     "file1": {
       "name": "File 1",
       "tooltip": "The first file can be anything"
@@ -25,12 +25,12 @@
       "tooltip": "Toggle this flag to print something else"
     }
   },
-  "text_fields": {
-    "text_field_1": {
+  "texts": {
+    "text_1": {
       "name": "Text field 1",
       "tooltip": "This is a free-text input"
     },
-    "text_field_2": {
+    "text_2": {
       "name": "Text field 2",
       "tooltip": "This is a free-text input too"
     }

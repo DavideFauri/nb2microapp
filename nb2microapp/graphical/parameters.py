@@ -11,41 +11,42 @@ from nb2microapp.config import *
 
 class FlagBox(QCheckBox):
     def __init__(self, flag: Flag):
-        super().__init__(flag.name)
-        self.flag = flag
+        super().__init__()
+        self.param = flag
+        self.setText(flag.name)
+        self.setToolTip(flag.tooltip)
         self.stateChanged.connect(self.set_flag)
-        self.setToolTip(self.flag.tooltip)
 
     def set_flag(self):
-        self.flag.value = self.isChecked()
-        print(self.flag.value)
+        self.param.value = self.isChecked()
+        print(self.param.value)
 
 
-class TextFieldBox(QLineEdit):
-    def __init__(self, text_field: TextField):
+class TextBox(QLineEdit):
+    def __init__(self, text: Text):
         super().__init__()
-        self.setPlaceholderText(text_field.name)
-        self.text_field = text_field
+        self.param = text
+        self.setPlaceholderText(text.name)
+        self.setToolTip(text.tooltip)
         self.editingFinished.connect(self.set_text)
-        self.setToolTip(self.text_field.tooltip)
 
     def set_text(self):
-        self.text_field.value = self.text()
-        print(self.text_field.value)
+        self.param.value = self.text()
+        print(self.param.value)
 
 
-class ChoicesBox(QComboBox):
-    def __init__(self, choices: Choices):
+class ChoiceBox(QComboBox):
+    def __init__(self, choice: Choice):
         super().__init__()
-        self.setPlaceholderText(choices.name)
-        self.insertItems(0, choices.options)
-        self.choices = choices
+        self.param = choice
+        self.setPlaceholderText(choice.name)
+        self.insertItems(0, choice.options)
+        self.setToolTip(choice.tooltip)
         self.activated.connect(self.set_choice)
-        self.setToolTip(self.choices.tooltip)
 
     def set_choice(self):
-        self.choices.value = self.currentText()
-        print(self.choices.value)
+        self.param.value = self.currentText()
+        print(self.param.value)
 
 
 class ParametersFrame(QFrame):
@@ -57,7 +58,7 @@ class ParametersFrame(QFrame):
 
         # Create the parameter frames, one for each param type
         self.make_param_frame(configuration.flags)
-        self.make_param_frame(configuration.text_fields)
+        self.make_param_frame(configuration.texts)
         self.make_param_frame(configuration.choices)
 
         self.setLayout(self.mainLayout)
@@ -72,10 +73,10 @@ class ParametersFrame(QFrame):
             typ = type(param)
             if typ is Flag:
                 layout.addWidget(FlagBox(param))
-            elif typ is TextField:
-                layout.addWidget(TextFieldBox(param))
-            elif typ is Choices:
-                layout.addWidget(ChoicesBox(param))
+            elif typ is Text:
+                layout.addWidget(TextBox(param))
+            elif typ is Choice:
+                layout.addWidget(ChoiceBox(param))
             else:
                 print(type(param))
         frame.setLayout(layout)
