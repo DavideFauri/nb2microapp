@@ -16,18 +16,20 @@ class App(QApplication):
 
 
 class AppWindow(QFrame):
-    def __init__(self, configuration):
+    def __init__(self, configuration: Config):
         super().__init__()
+        self.configuration = configuration
 
-        self.setWindowTitle(configuration.app_name)
+        self.setWindowTitle(self.configuration.app_name)
         mainLayout = QVBoxLayout()
+        mainLayout.setSpacing(0)
 
         # first draw the drop boxes
-        self.d_frame = DropBoxesFrame(configuration)
+        self.d_frame = DropBoxesFrame(self.configuration)
         mainLayout.addWidget(self.d_frame, stretch=2)
 
         # then draw (if available) the flags, input fields, etc.
-        self.p_frame = ParametersFrame(configuration)
+        self.p_frame = ParametersFrame(self.configuration)
         mainLayout.addWidget(self.p_frame, stretch=1)
 
         # then draw the launch button
@@ -37,8 +39,7 @@ class AppWindow(QFrame):
         self.setLayout(mainLayout)
 
     def callback(self):
-        filenames = [d.input_file for d in self.d_frame.dropboxes]
-        print(filenames)
+        print(self.configuration.to_dict())
 
 
 class ButtonFrame(QFrame):
@@ -46,7 +47,8 @@ class ButtonFrame(QFrame):
         super().__init__()
 
         self.button = QPushButton("Click me")
-        self.button.clicked.connect(action)
+        self.action = action
+        self.button.clicked.connect(self.focus_and_act)
 
         layout = QHBoxLayout()
         layout.addStretch()
@@ -54,3 +56,7 @@ class ButtonFrame(QFrame):
         layout.addStretch()
 
         self.setLayout(layout)
+
+    def focus_and_act(self):
+        self.setFocus()
+        self.action()

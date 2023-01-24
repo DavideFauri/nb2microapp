@@ -53,6 +53,7 @@ class ParametersFrame(QFrame):
         super().__init__()
         self.params = []
         self.mainLayout = QVBoxLayout()
+        self.mainLayout.setSpacing(0)
 
         # Create the parameter frames, one for each param type
         self.make_param_frame(configuration.flags)

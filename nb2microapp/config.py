@@ -88,3 +88,16 @@ class Config:
         self.flags = [Flag(ID, f) for ID, f in config["flags"].items()]
         self.text_fields = [TextField(ID, t) for ID, t in config["text_fields"].items()]
         self.choices = [Choices(ID, c) for ID, c in config["choices"].items()]
+
+    def to_dict(self) -> dict:
+        d = {}
+        d["app_name"] = self.app_name
+        d["notebook"] = self.notebook
+        d["inputs"] = dict([(i.identifier, i.value) for i in self.input_files])
+        if self.flags:
+            d["flags"] = dict([(f.identifier, f.value) for f in self.flags])
+        if self.text_fields:
+            d["text_fields"] = dict([(t.identifier, t.value) for t in self.text_fields])
+        if self.choices:
+            d["choices"] = dict([(c.identifier, c.value) for c in self.choices])
+        return d
