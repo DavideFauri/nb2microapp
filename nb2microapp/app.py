@@ -30,4 +30,27 @@ class AppWindow(QFrame):
         self.p_frame = ParametersFrame(configuration)
         mainLayout.addWidget(self.p_frame, stretch=1)
 
+        # then draw the launch button
+        self.b_frame = ButtonFrame(action=self.callback)
+        mainLayout.addWidget(self.b_frame, stretch=0)
+
         self.setLayout(mainLayout)
+
+    def callback(self):
+        filenames = [d.input_file for d in self.d_frame.dropboxes]
+        print(filenames)
+
+
+class ButtonFrame(QFrame):
+    def __init__(self, action=None):
+        super().__init__()
+
+        self.button = QPushButton("Click me")
+        self.button.clicked.connect(action)
+
+        layout = QHBoxLayout()
+        layout.addStretch()
+        layout.addWidget(self.button)
+        layout.addStretch()
+
+        self.setLayout(layout)
