@@ -48,7 +48,7 @@ class ButtonFrame(QFrame):
 
         self.button = QPushButton("Click me")
         self.action = action
-        self.button.clicked.connect(self.focus_and_act)
+        self.button.clicked.connect(self.launch)
 
         layout = QHBoxLayout()
         layout.addStretch()
@@ -57,6 +57,7 @@ class ButtonFrame(QFrame):
 
         self.setLayout(layout)
 
-    def focus_and_act(self):
+    def launch(self):
         self.setFocus()
         self.action()
+        self.parent().close()
