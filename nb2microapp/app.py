@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QApplication, QFrame, QPushButton, QVBoxLayout, QHBo
 from nb2microapp.config import Config
 from nb2microapp.graphical.dropboxes import DropBoxesFrame
 from nb2microapp.graphical.parameters import ParametersFrame
+from nb2microapp.graphical.launcher import LauncherFrame
 
 
 class App(QApplication):
@@ -32,32 +33,20 @@ class AppWindow(QFrame):
         self.p_frame = ParametersFrame(self.configuration)
         mainLayout.addWidget(self.p_frame, stretch=1)
 
-        # then draw the launch button
-        self.b_frame = ButtonFrame(action=self.callback)
-        mainLayout.addWidget(self.b_frame, stretch=0)
+        # then draw the launch button and other stuff
+        self.l_frame = LauncherFrame()
+        mainLayout.addWidget(self.l_frame, stretch=0)
+
+        # then connect all the things to the launcher frame
+        self.l_frame.nb_link.set_link(configuration.notebook)
+        self.l_frame.conf_link.set_link("config.json")
+        self.l_frame.button.clicked.connect(self.launch)
 
         self.setLayout(mainLayout)
 
-    def callback(self):
-        print(self.configuration.to_dict())
-
-
-class ButtonFrame(QFrame):
-    def __init__(self, action=None):
-        super().__init__()
-
-        self.button = QPushButton("Click me")
-        self.action = action
-        self.button.clicked.connect(self.launch)
-
-        layout = QHBoxLayout()
-        layout.addStretch()
-        layout.addWidget(self.button)
-        layout.addStretch()
-
-        self.setLayout(layout)
-
     def launch(self):
-        self.setFocus()
-        self.action()
-        self.parent().close()
+        self.l_frame.button.setFocus()
+        if self.l_frame.saveHTML.isChecked():
+            print("saving as HTML")
+        print(self.configuration.to_dict())
+        self.close()
