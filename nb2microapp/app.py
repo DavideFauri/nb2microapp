@@ -1,7 +1,7 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QFrame, QPushButton, QVBoxLayout, QHBoxLayout
 from nb2microapp.config import Config
-from nb2microapp.graphical.dropbox import DropBoxesFrame
+from nb2microapp.graphical.dropboxes import DropBoxesFrame
 from nb2microapp.graphical.parameters import ParametersFrame
 
 
